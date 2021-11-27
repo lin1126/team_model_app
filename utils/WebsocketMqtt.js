@@ -12,7 +12,7 @@ const options = {
 
 var client
 
-client = mqtt.connect('ws://39.105.106.13:8083/mqtt', options)
+client = mqtt.connect('ws://39.105.106.13:8083/mqtt')
 const subscription = function (topic) {
   client.on('reconnect', (error) => {
     console.log('正在重连:', error)
@@ -37,4 +37,16 @@ const subscription = function (topic) {
     )
   })
 }
-module.exports = { client, subscription }
+
+var sendMqttMsg = function (theme, Data) {
+  client.publish(theme, Data, {
+    qos: 1,
+    rein: false
+  }, (error) => {
+    if (!error) {
+
+    }
+    console.log(error || '发布成功')
+  })
+}
+module.exports = { client, subscription, sendMqttMsg }

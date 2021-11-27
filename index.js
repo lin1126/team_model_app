@@ -1,5 +1,5 @@
 const express = require('express')
-const { subscription } = require('./utils/WebsocketMqtt')
+const { subscription, sendMqttMsg } = require('./utils/WebsocketMqtt')
 const app = express()
 const humitureApi = require('./server/api/humitureAPI')
 const equipmentApi = require('./server/api/equipmentAPI')
@@ -22,6 +22,11 @@ subscription('raspi/#')
 // 挂载温湿度路由api
 app.use('/api/humiture', humitureApi)
 app.use('/api/equipment', equipmentApi)
+
+// 每隔5s发送一次请求，获取当前的教室内图片信息
+setInterval(() => {
+  sendMqttMsg('raspi/pic', 'update')
+}, 5000)
 
 // 监听端口
 app.listen(port, () => {
