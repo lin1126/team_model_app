@@ -19,6 +19,7 @@ app.all('*', function (req, res, next) {
 const port = 3000
 // 订阅raspi/#的主题
 subscription('raspi/#')
+subscription('pic/#')
 // 挂载路由api
 app.use('/api/humiture', humitureApi)
 app.use('/api/equipment', equipmentApi)

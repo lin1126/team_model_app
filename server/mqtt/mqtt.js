@@ -15,7 +15,7 @@ client.on('message', (topic, message) => {
     // 添加设备使用数据
     addEquipment(mess)
     // 保存图片
-  } else if (topic == 'raspi/pic/update') {
+  } else if (topic == 'pic/update') {
     base64String = message.toString('base64')
     dataBuffer = new Buffer(base64String, 'base64');
     var timestamp = new Date().getTime()
