@@ -17,3 +17,18 @@ const studentSchema = mongoose.Schema({
 })
 
 const student = mongoose.model('Student_db', studentSchema, 'student_db')
+
+function findStudentClass(grade, career, cla) {
+  return new Promise((resolve, reject) => {
+    student.find({ grade: grade, career: career, class: cla }, (err, doc) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(doc)
+    })
+  })
+}
+
+module.exports = {
+  findStudentClass,
+}
