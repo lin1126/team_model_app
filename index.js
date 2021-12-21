@@ -1,11 +1,19 @@
 const express = require('express')
 const { subscription, sendMqttMsg } = require('./utils/WebsocketMqtt')
 const app = express()
+const bodyParser = require('body-parser')
+
 const humitureApi = require('./server/api/humitureAPI')
 const equipmentApi = require('./server/api/equipmentAPI')
 const PictureApi = require('./server/api/PictureAPI')
+const loginAPI = require('./server/api/loginAPI')
+
 require('./server/mqtt/mqtt')
 require('./server/dbs/humitureDB')
+
+// 将body设为可用
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 // 处理跨域问题
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -20,10 +28,13 @@ const port = 3000
 // 订阅raspi/#的主题
 subscription('raspi/#')
 subscription('pic/#')
+
 // 挂载路由api
 app.use('/api/humiture', humitureApi)
 app.use('/api/equipment', equipmentApi)
 app.use('/api/picture', PictureApi)
+app.use('/api/login', loginAPI)
+
 // 每隔5s发送一次请求，获取当前的教室内图片信息
 setInterval(() => {
   sendMqttMsg('raspi/pic', 'update')

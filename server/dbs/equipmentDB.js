@@ -40,7 +40,7 @@ function getEquipment(page, limit) {
       .exec((err, doc) => {
         if (err) {
           console.log(err)
-          resolve('查询设备使用记录失败')
+          reject('查询设备使用记录失败')
           return
         }
         console.log('查询设备使用记录成功')

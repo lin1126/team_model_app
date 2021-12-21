@@ -1,3 +1,6 @@
+/***************************************************************
+ * 获取教室图片名称API
+ ***************************************************************/
 const express = require('express')
 const app = express()
 const fs = require('fs')
@@ -9,19 +12,17 @@ const readDir = (start, end, skip, limit) => {
   // 遍历所图片
   dirInfo.forEach((item) => {
     // 去掉后缀
-    item = item.replace(/[^\d]/g, "")
+    item = item.replace(/[^\d]/g, '')
     // 遍历文件，将符合条件的文件名存入数组
     if (item >= start && item <= end) {
       PicDirInfo.push(item)
     }
-
   })
   DirLength = PicDirInfo.length
   // 相当于分页查询，skip代表页数，limit相当于每页的数据条数
   PicDirInfo = PicDirInfo.splice((skip - 1) * limit, limit)
-  return { 'length': DirLength, 'PicDirInfo': PicDirInfo }
+  return { length: DirLength, PicDirInfo: PicDirInfo }
 }
-
 
 app.get('/get', (req, res) => {
   // readDir(1638023009972, 1638026141389,)

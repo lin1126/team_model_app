@@ -4,7 +4,7 @@
 const mongoose = require('mongoose')
 
 // 建立连接
-mongoose.connect('mongodb://39.105.106.13:27017/team_model', (err) => {
+mongoose.connect('mongodb://lcj:670542311@39.105.106.13:27017/team_model', { useNewUrlParser: true }, (err) => {
   if (err) {
     console.log(err)
     return
