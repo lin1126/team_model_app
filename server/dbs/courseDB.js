@@ -21,40 +21,6 @@ const courseSchema = mongoose.Schema({
 
 const course = mongoose.model('Course_db', courseSchema, 'course_db')
 
-function findCourse(ID) {
-  // 查询当前学生的课程
-  return new Promise((resolve, reject) => {
-    courseRaletion.aggregate(
-      [
-        {
-          $match: { ID: ID },
-        },
-        {
-          $lookup: {
-            //定义规则
-            from: 'course_db', //在order_item集合中查找
-            localField: 'courseID', //当前查询的字段
-            foreignField: 'courseID', //对应order_item集合的哪个字段
-            as: 'courseDetail', //在查询结果中键值
-          },
-        },
-        {
-          $project: { ID: 1, teacherID: 1, teacherName: 1, courseDetail: 1 },
-        },
-      ],
-      (err, doc) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(doc)
-      }
-    )
-  })
-}
-
-module.exports = {
-  findCourse,
-}
 // var time = new Date()
 // const date = time.getTime()
 // const courseInfo = {

@@ -3,14 +3,13 @@
  ***************************************************************/
 const express = require('express')
 const app = express()
-const { findCourse } = require('../dbs/courseDB')
+const { findCourse } = require('../dbs/courseRaletionDB.js')
 const { verifyToken } = require('../../server/middlewares/auth')
 
 // 获取学生课程信息表
 app.get('/getCourse', async (req, res) => {
   const token = req.headers.authorization
   const isValid = verifyToken(token)
-  console.log(isValid)
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
     if (isValid.identify == '学生') {
