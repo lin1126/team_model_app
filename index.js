@@ -8,6 +8,7 @@ const equipmentApi = require('./server/api/equipmentAPI')
 const PictureApi = require('./server/api/PictureAPI')
 const loginAPI = require('./server/api/loginAPI')
 const courseApi = require('./server/api/courseAPI')
+const courseNoticeAPI = require('./server/api/courseNoticeAPI')
 
 require('./server/mqtt/mqtt')
 require('./server/dbs/humitureDB')
@@ -36,6 +37,7 @@ app.use('/api/equipment', equipmentApi)
 app.use('/api/picture', PictureApi)
 app.use('/api/login', loginAPI)
 app.use('/api/course', courseApi)
+app.use('/api/notice', courseNoticeAPI)
 
 // 每隔5s发送一次请求，获取当前的教室内图片信息
 setInterval(() => {
