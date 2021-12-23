@@ -25,7 +25,7 @@ const courseNotice = mongoose.model('Course_notice_db', courseNoticeSchema, 'cou
 function getCourseNotice(data, page, limit) {
   return new Promise((resolve, reject) => {
     courseNotice
-      .find({ ID: data })
+      .find({ ID: data, type: '课堂通知' })
       .skip((page - 1) * limit)
       .limit(limit - 0)
       .sort({ State: 1 })

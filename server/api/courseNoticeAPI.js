@@ -6,6 +6,7 @@ const app = express()
 const { getCourseNotice } = require('../dbs/courseNoticeDB')
 const { verifyToken } = require('../../server/middlewares/auth')
 
+// 学生获取类型为课堂通知的消息
 app.get('/getNotice', async (req, res) => {
   const token = req.headers.authorization
   const isValid = verifyToken(token)

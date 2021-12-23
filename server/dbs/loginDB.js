@@ -20,6 +20,7 @@ const studentSchema = mongoose.Schema({
   email: String,
   photo: String,
   identity: String,
+  place: String,
 })
 
 const student = mongoose.model('Student_db', studentSchema, 'student_db')
@@ -60,7 +61,7 @@ function verifyUser(username, userpwd) {
     })
   })
 }
-
+// 利用token获取学生信息
 function getStuInfo(data) {
   return new Promise((resolve, reject) => {
     student.find({ ID: data }, (err, doc) => {
@@ -76,4 +77,5 @@ function getStuInfo(data) {
 module.exports = {
   verifyUser,
   getStuInfo,
+  student,
 }
