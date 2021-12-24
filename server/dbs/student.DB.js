@@ -84,9 +84,22 @@ function updatePwd(id, oldPwd, newPwd) {
   })
 }
 
+// 修改头像
+function updatePhoto(id, data) {
+  return new Promise((resolve, reject) => {
+    student.updateOne({ ID: id }, { photo: data }, (err, doc) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(200)
+    })
+  })
+}
+
 updatePwd(1631808212211, 21221)
 module.exports = {
   findStudentClass,
   updateStudentInfo,
   updatePwd,
+  updatePhoto,
 }
