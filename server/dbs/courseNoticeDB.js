@@ -1,5 +1,5 @@
 /******************************************************
- * 本文件封装与课程关系有关的数据库操作
+ * 本文件封装与课程通知有关的数据库操作
  ******************************************************/
 const mongoose = require('../../utils/mongodb')
 // const { findStudentClass } = require('./student.DB')
@@ -21,7 +21,7 @@ const courseNoticeSchema = mongoose.Schema({
 })
 
 const courseNotice = mongoose.model('Course_notice_db', courseNoticeSchema, 'course_notice_db')
-
+// 发送排序后的课程通知
 function getCourseNotice(data, page, limit) {
   return new Promise((resolve, reject) => {
     courseNotice
@@ -39,16 +39,63 @@ function getCourseNotice(data, page, limit) {
   })
 }
 
-// 添加一条课程公告
-function addNotice(data) {
-  const u = new courseNotice(data)
-  u.save((err) => {
-    if (err) {
-      console.log(err)
-      return
-    }
+// 将课程通知的状态改成已读
+function readNotice(id, data) {
+  return new Promise((resolve, reject) => {
+    courseNotice.updateOne({ _id: id }, { State: data }, (err, doc) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(200)
+    })
   })
 }
+
+// 将该学生的所有通知设为true
+function readAllNotice(ID) {
+  return new Promise((resolve, reject) => {
+    courseNotice.updateMany({ ID: ID, State: 'false' }, { State: 'true' }, (err, doc) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(200)
+    })
+  })
+}
+
+// 删除通知
+function delNotice(id) {
+  return new Promise((resolve, reject) => {
+    courseNotice.deleteOne({ _id: id }, (err, doc) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(200)
+    })
+  })
+}
+
+// 删除选中的通知
+function delCheckedNotice(arr) {
+  arr.forEach(async (item) => {
+    const res = await delNotice(item)
+    if (res == 400) {
+      return 400
+    }
+  })
+  return 200
+}
+
+// 添加一条课程公告
+// function addNotice(data) {
+//   const u = new courseNotice(data)
+//   u.save((err) => {
+//     if (err) {
+//       console.log(err)
+//       return
+//     }
+//   })
+// }
 
 // 添加课程公告的方法
 
@@ -72,4 +119,8 @@ function addNotice(data) {
 // })
 module.exports = {
   getCourseNotice,
+  readNotice,
+  readAllNotice,
+  delNotice,
+  delCheckedNotice,
 }
