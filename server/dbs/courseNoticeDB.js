@@ -38,6 +38,23 @@ function getCourseNotice(data, page, limit) {
       })
   })
 }
+// 根据学号和课程号查找课程通知
+function inCourseNotice(data, courseID, page, limit) {
+  return new Promise((resolve, reject) => {
+    courseNotice
+      .find({ ID: data, type: '课堂通知', courseID: courseID })
+      .skip((page - 1) * limit)
+      .limit(limit - 0)
+      .sort({ State: 1 })
+      .sort({ Time: -1 })
+      .exec((err, doc) => {
+        if (err) {
+          reject('查询课程公告失败')
+        }
+        resolve(doc)
+      })
+  })
+}
 
 // 将课程通知的状态改成已读
 function readNotice(id, data) {
@@ -123,4 +140,5 @@ module.exports = {
   readAllNotice,
   delNotice,
   delCheckedNotice,
+  inCourseNotice,
 }

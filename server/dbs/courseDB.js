@@ -21,6 +21,18 @@ const courseSchema = mongoose.Schema({
 
 const course = mongoose.model('Course_db', courseSchema, 'course_db')
 
+// 查找某班级下所有学生
+function findStudentClass(courseID) {
+  return new Promise((resolve, reject) => {
+    course.find({ courseID: courseID }, (err, doc) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(doc)
+    })
+  })
+}
+
 // var time = new Date()
 // const date = time.getTime()
 // const courseInfo = {
@@ -41,3 +53,7 @@ const course = mongoose.model('Course_db', courseSchema, 'course_db')
 //     return
 //   }
 // })
+
+module.exports = {
+  findStudentClass,
+}

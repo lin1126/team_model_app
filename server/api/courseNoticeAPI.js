@@ -3,7 +3,7 @@
  ***************************************************************/
 const express = require('express')
 const app = express()
-const { getCourseNotice, readNotice, readAllNotice, delNotice, delCheckedNotice } = require('../dbs/courseNoticeDB')
+const { getCourseNotice, readNotice, readAllNotice, delNotice, delCheckedNotice, inCourseNotice } = require('../dbs/courseNoticeDB')
 const { verifyToken } = require('../../server/middlewares/auth')
 
 // 学生获取类型为课堂通知的消息
@@ -25,6 +25,26 @@ app.get('/getNotice', async (req, res) => {
   }
 })
 
+// 学生获取类型为课堂通知且为某一个课程下的的通知
+app.get('/getCourseNotice', async (req, res) => {
+  const token = req.headers.authorization
+  const isValid = verifyToken(token)
+  // token成功时就获取相应信息
+  if (isValid.isValid == true) {
+    if (isValid.identify == '学生') {
+      var doc = await inCourseNotice(parseInt(req.query._id), parseInt(req.query._courseID), req.query._page, req.query._limit)
+      res.send(doc)
+    } else {
+      const msg = { isValid: isValid.isValid, info: '权限不足' }
+      res.send(msg)
+    }
+  } else {
+    const msg = { isValid: isValid.isValid, info: isValid.tip }
+    res.send(msg)
+  }
+})
+
+// 读取某一条
 app.post('/readNotice', async (req, res) => {
   const token = req.headers.authorization
   const { _id, _state } = req.body
@@ -43,7 +63,7 @@ app.post('/readNotice', async (req, res) => {
     res.send(msg)
   }
 })
-
+// 一键已读功能
 app.post('/readAllNotice', async (req, res) => {
   const token = req.headers.authorization
   const { _ID } = req.body
