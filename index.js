@@ -11,6 +11,7 @@ const courseApi = require('./server/api/courseAPI')
 const courseNoticeAPI = require('./server/api/courseNoticeAPI')
 const studentApi = require('./server/api/studentAPI')
 const courseMessageAPI = require('./server/api/courseMessageAPI')
+const courseMesChildrenAPI = require('./server/api/courseMesChildrenAPI')
 
 require('./server/mqtt/mqtt')
 require('./server/dbs/humitureDB')
@@ -42,6 +43,7 @@ app.use('/api/course', courseApi)
 app.use('/api/notice', courseNoticeAPI)
 app.use('/api/student', studentApi)
 app.use('/api/message', courseMessageAPI)
+app.use('/api/MessChildren', courseMesChildrenAPI)
 
 // 每隔5s发送一次请求，获取当前的教室内图片信息
 setInterval(() => {

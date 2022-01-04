@@ -13,7 +13,7 @@ const MessageSchema = mongoose.Schema({
 })
 
 const message = mongoose.model('Course_message_db', MessageSchema, 'course_message_db')
-
+// 获取留言和相应的子留言
 function getMessage(courseID, page, limit) {
   return new Promise((resolve, reject) => {
     message.aggregate(
@@ -30,7 +30,21 @@ function getMessage(courseID, page, limit) {
             as: 'stuInfo', //在查询结果中键值
           },
         },
-        { $project: { courseID: 1, ID: 1, message: 1, time: 1, stuInfo: { name: 1, photo: 1 } } },
+        {
+          $project: { courseID: 1, ID: 1, message: 1, time: 1, isShow: 1, stuInfo: { name: 1, photo: 1 } },
+        },
+        {
+          $lookup: {
+            //定义规则
+            from: 'course_message_children_db', //在order_item集合中查找
+            localField: '_id', //当前查询的字段
+            foreignField: 'childrenID', //对应order_item集合的哪个字段
+            as: 'children', //在查询结果中键值
+          },
+        },
+        {
+          $sort: { time: -1 },
+        },
       ],
       (err, doc) => {
         if (err) {
@@ -42,22 +56,26 @@ function getMessage(courseID, page, limit) {
   })
 }
 
+function setMessage(courseID, ID, content) {
+  return new Promise((resolve, reject) => {
+    var time = new Date()
+    const date = time.getTime()
+    const courseInfo = {
+      courseID: courseID,
+      ID: ID,
+      message: content,
+      time: date,
+    }
+    const u = new message(courseInfo)
+    u.save((err) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(200)
+    })
+  })
+}
 module.exports = {
   getMessage,
+  setMessage,
 }
-// var time = new Date()
-// const date = time.getTime()
-// const courseInfo = {
-//   courseID: 1,
-//   ID: 1631808212211,
-//   message: '这是一门计算机高阶专业课，而不是科普课程，没有相应的专业基础知识，不建议来学习，更不建议听不懂还来怪老师的。课程确非完美，仍有改进的空间，但是对于想要获取大数据基础知识的人来说，足够满足需求了',
-//   time: date,
-// }
-
-// const u = new message(courseInfo)
-// u.save((err) => {
-//   if (err) {
-//     console.log(err)
-//     return
-//   }
-// })
