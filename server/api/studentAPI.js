@@ -2,9 +2,10 @@ const express = require('express')
 // 获取前台提交的文件数据的第三方模块
 const multiparty = require('multiparty')
 const app = express()
-const { updateStudentInfo, updatePwd, updatePhoto } = require('../dbs/student.DB')
+const { updateStudentInfo, updatePwd, updatePhoto, getGrade, getCareer, getClass } = require('../dbs/student.DB')
 const { verifyToken } = require('../../server/middlewares/auth')
 
+// 更新用户基本信息
 app.get('/update', async (req, res) => {
   const token = req.headers.authorization
   const isValid = verifyToken(token)
@@ -22,7 +23,7 @@ app.get('/update', async (req, res) => {
     res.send(msg)
   }
 })
-
+// 修改密码
 app.post('/updatePwd', async (req, res) => {
   const { _id, _old, _new } = req.body
   const token = req.headers.authorization
@@ -41,7 +42,7 @@ app.post('/updatePwd', async (req, res) => {
     res.send(msg)
   }
 })
-
+// 更换头像
 app.post('/updateImage', (req, res) => {
   const token = req.headers.authorization
   const isValid = verifyToken(token)
@@ -66,6 +67,61 @@ app.post('/updateImage', (req, res) => {
     })
   } else {
     const msg = { isValid: isValid.isValid, info: isValid.identify }
+    res.send(msg)
+  }
+})
+
+// 获取年级
+app.get('/getGrade', async (req, res) => {
+  const token = req.headers.authorization
+  const isValid = verifyToken(token)
+  // token成功时就获取相应信息
+  if (isValid.isValid == true) {
+    if (isValid.identify == '教师') {
+      var doc = await getGrade()
+      res.send(doc)
+    } else {
+      const msg = { isValid: isValid.isValid, info: '权限不足' }
+      res.send(msg)
+    }
+  } else {
+    const msg = { isValid: isValid.isValid, info: isValid.tip }
+    res.send(msg)
+  }
+})
+// 根据年级获取专业
+app.get('/getCareer', async (req, res) => {
+  const token = req.headers.authorization
+  const isValid = verifyToken(token)
+  // token成功时就获取相应信息
+  if (isValid.isValid == true) {
+    if (isValid.identify == '教师') {
+      var doc = await getCareer(req.query._grade)
+      res.send(doc)
+    } else {
+      const msg = { isValid: isValid.isValid, info: '权限不足' }
+      res.send(msg)
+    }
+  } else {
+    const msg = { isValid: isValid.isValid, info: isValid.tip }
+    res.send(msg)
+  }
+})
+// 根据年级和专业获取班级
+app.get('/getClass', async (req, res) => {
+  const token = req.headers.authorization
+  const isValid = verifyToken(token)
+  // token成功时就获取相应信息
+  if (isValid.isValid == true) {
+    if (isValid.identify == '教师') {
+      var doc = await getClass(req.query._grade, req.query._career)
+      res.send(doc)
+    } else {
+      const msg = { isValid: isValid.isValid, info: '权限不足' }
+      res.send(msg)
+    }
+  } else {
+    const msg = { isValid: isValid.isValid, info: isValid.tip }
     res.send(msg)
   }
 })

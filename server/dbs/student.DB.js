@@ -95,11 +95,78 @@ function updatePhoto(id, data) {
     })
   })
 }
-
-updatePwd(1631808212211, 21221)
+// 获取年级
+function getGrade() {
+  return new Promise((resolve, reject) => {
+    student
+      .aggregate([
+        // 用group分类进行去重
+        {
+          $group: {
+            _id: '$grade',
+          },
+        },
+      ])
+      .exec((err, doc) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(doc)
+      })
+  })
+}
+// 根据年级获取专业
+function getCareer(grade) {
+  return new Promise((resolve, reject) => {
+    student
+      .aggregate([
+        {
+          $match: { grade: grade },
+        },
+        // 用group分类进行去重
+        {
+          $group: {
+            _id: '$career',
+          },
+        },
+      ])
+      .exec((err, doc) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(doc)
+      })
+  })
+}
+// 根据年级、专业获取班级
+function getClass(grade, career) {
+  return new Promise((resolve, reject) => {
+    student
+      .aggregate([
+        {
+          $match: { grade: grade, career: career },
+        },
+        // 用group分类进行去重
+        {
+          $group: {
+            _id: '$class',
+          },
+        },
+      ])
+      .exec((err, doc) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(doc)
+      })
+  })
+}
 module.exports = {
   findStudentClass,
   updateStudentInfo,
   updatePwd,
   updatePhoto,
+  getGrade,
+  getCareer,
+  getClass,
 }
