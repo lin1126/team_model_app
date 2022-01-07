@@ -1,8 +1,9 @@
 /******************************************************
  * 本文件封装与课程信息有关的数据库操作
  ******************************************************/
+const { stringify } = require('nodemon/lib/utils')
 const mongoose = require('../../utils/mongodb')
-const { courseRaletion } = require('./courseRaletionDB')
+const { addAllCourse } = require('./courseRaletionDB')
 const { getStuInfo } = require('./loginDB')
 
 const courseSchema = mongoose.Schema({
@@ -33,27 +34,60 @@ function findStudentClass(courseID) {
   })
 }
 
-// var time = new Date()
-// const date = time.getTime()
-// const courseInfo = {
-//   courseID: 6,
-//   name: '传感器原理及应用',
-//   class: '18物联网工程2班',
-//   year: '2019-2020第二学期',
-//   organization: '福建江夏学院电子信息科学学院',
-//   time: date,
-//   state: 'end',
-//   Photo: 'http://39.105.106.13:9999/stuphoto/cousephoto.png',
-// }
+// 查找某班级下所有学生
+function findStudentClass(courseID) {
+  return new Promise((resolve, reject) => {
+    course.find({ courseID: courseID }, (err, doc) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(doc)
+    })
+  })
+}
 
-// const u = new course(courseInfo)
-// u.save((err) => {
-//   if (err) {
-//     console.log(err)
-//     return
-//   }
-// })
+// 新增课程
+function addCourse(teacherID, teacherName, courseMsg) {
+  return new Promise((resolve, reject) => {
+    // 设置时间、将课程信息转为json类型
+    courseMsg = JSON.parse(courseMsg)
+    var time = new Date()
+    var CID = 0
+    const date = time.getTime()
+    // 获取当前的课程号
+    course
+      .find({}, { courseID: 1 })
+      .limit(1)
+      .sort({ time: -1 })
+      .exec((err, doc) => {
+        if (err) {
+          console.log(err)
+        }
+        // 将当前课程号 + 1, 然后存入数据库
+        CID = doc[0].courseID + 1
+        const courseInfo = {
+          courseID: CID,
+          name: courseMsg.name,
+          class: courseMsg.gradeValue + courseMsg.careerValue + courseMsg.classValue + '班',
+          year: courseMsg.semester,
+          organization: courseMsg.organization,
+          time: date,
+          state: 'underway',
+          Photo: 'http://39.105.106.13:9999/stuphoto/cousephoto.png',
+        }
+        const u = new course(courseInfo)
+        u.save((err) => {
+          if (err) {
+            reject(err)
+          }
+          addAllCourse(CID, teacherID, teacherName, courseMsg)
+          resolve(200)
+        })
+      })
+  })
+}
 
 module.exports = {
   findStudentClass,
+  addCourse,
 }

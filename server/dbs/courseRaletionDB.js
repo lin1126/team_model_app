@@ -2,6 +2,7 @@
  * 本文件封装与课程关系有关的数据库操作
  ******************************************************/
 const mongoose = require('../../utils/mongodb')
+const { findStudentClass } = require('./student.DB')
 
 const courseRaletionSchema = mongoose.Schema({
   ID: Number,
@@ -75,35 +76,38 @@ function findTeachCourse(teacherID) {
         }
         resolve(doc)
       })
+  })
+}
 
-    // 添加一条关系
-    function addRelation(data) {
-      const u = new courseRaletion(data)
-      u.save((err) => {
-        if (err) {
-          console.log(err)
-          return
-        }
+// 添加一条关系
+function addRelation(data) {
+  const u = new courseRaletion(data)
+  u.save((err) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+  })
+}
+function addAllCourse(CID, teacherID, teacherName, courseMsg) {
+  findStudentClass(courseMsg.gradeValue, courseMsg.careerValue, courseMsg.classValue).then((doc) => {
+    var msg = []
+    for (var i = 0; i < doc.length; i++) {
+      msg.push({
+        ID: doc[i].ID,
+        courseID: CID,
+        teacherID: teacherID,
+        teacherName: teacherName,
       })
+    }
+    for (var i = 0; i < msg.length; i++) {
+      addRelation(msg[i])
     }
   })
 }
 
-// findStudentClass(18, '物联网工程', 2).then((doc) => {
-//   var msg = []
-//   for (var i = 0; i < doc.length; i++) {
-//     msg.push({
-//       ID: doc[i].ID,
-//       courseID: 4,
-//       teacherID: 38277721,
-//     })
-//   }
-//   for (var i = 0; i < msg.length; i++) {
-//     addRelation(msg[i])
-//   }
-// })
-
 module.exports = {
   findCourse,
   findTeachCourse,
+  addAllCourse,
 }
