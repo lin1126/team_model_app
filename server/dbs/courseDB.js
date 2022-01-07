@@ -76,12 +76,12 @@ function addCourse(teacherID, teacherName, courseMsg) {
           Photo: 'http://39.105.106.13:9999/stuphoto/cousephoto.png',
         }
         const u = new course(courseInfo)
-        u.save((err) => {
+        u.save(async (err) => {
           if (err) {
             reject(err)
           }
-          addAllCourse(CID, teacherID, teacherName, courseMsg)
-          resolve(200)
+          const res = await addAllCourse(CID, teacherID, teacherName, courseMsg).then()
+          resolve(res)
         })
       })
   })

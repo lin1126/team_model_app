@@ -8,6 +8,7 @@ const courseRaletionSchema = mongoose.Schema({
   ID: Number,
   courseID: Number,
   teacherID: Number,
+  teacherName: String,
 })
 
 const courseRaletion = mongoose.model('Course_raletion_db', courseRaletionSchema, 'course_raletion_db')
@@ -90,19 +91,23 @@ function addRelation(data) {
   })
 }
 function addAllCourse(CID, teacherID, teacherName, courseMsg) {
-  findStudentClass(courseMsg.gradeValue, courseMsg.careerValue, courseMsg.classValue).then((doc) => {
-    var msg = []
-    for (var i = 0; i < doc.length; i++) {
-      msg.push({
-        ID: doc[i].ID,
-        courseID: CID,
-        teacherID: teacherID,
-        teacherName: teacherName,
-      })
-    }
-    for (var i = 0; i < msg.length; i++) {
-      addRelation(msg[i])
-    }
+  return new Promise((resolve, reject) => {
+    findStudentClass(courseMsg.gradeValue, courseMsg.careerValue, courseMsg.classValue).then((doc) => {
+      var msg = []
+      for (var i = 0; i < doc.length; i++) {
+        msg.push({
+          ID: doc[i].ID,
+          courseID: CID,
+          teacherID: teacherID,
+          teacherName: teacherName,
+        })
+      }
+
+      for (var i = 0; i < msg.length; i++) {
+        addRelation(msg[i])
+      }
+      resolve(200)
+    })
   })
 }
 
