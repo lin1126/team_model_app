@@ -11,7 +11,7 @@ app.get('/update', async (req, res) => {
   const isValid = verifyToken(token)
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
-    if (isValid.identify == '学生') {
+    if (isValid.identify == '学生' || '教师') {
       var doc = await updateStudentInfo(parseInt(req.query._id), req.query._field, req.query._data)
       res.send(doc)
     } else {
@@ -30,7 +30,7 @@ app.post('/updatePwd', async (req, res) => {
   const isValid = verifyToken(token)
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
-    if (isValid.identify == '学生') {
+    if (isValid.identify == '学生' || '教师') {
       var doc = await updatePwd(parseInt(_id), _old, _new)
       res.send(doc)
     } else {

@@ -32,7 +32,7 @@ app.get('/getCourseDetail', async (req, res) => {
   const isValid = verifyToken(token)
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
-    if (isValid.identify == '学生') {
+    if (isValid.identify == '学生' || '教师') {
       var doc = await findStudentClass(parseInt(req.query._courseID))
       res.send(doc)
     } else {

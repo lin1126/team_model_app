@@ -10,6 +10,7 @@ const MessageSchema = mongoose.Schema({
   ID: Number,
   message: String,
   time: String,
+  isShow: String,
 })
 
 const message = mongoose.model('Course_message_db', MessageSchema, 'course_message_db')
@@ -65,6 +66,7 @@ function setMessage(courseID, ID, content) {
       ID: ID,
       message: content,
       time: date,
+      isShow: false,
     }
     const u = new message(courseInfo)
     u.save((err) => {

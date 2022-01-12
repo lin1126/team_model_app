@@ -2,7 +2,7 @@
  * 本文件封装与课程通知有关的数据库操作
  ******************************************************/
 const mongoose = require('../../utils/mongodb')
-// const { findStudentClass } = require('./student.DB')
+const { findStudentClass } = require('./student.DB')
 const courseNoticeSchema = mongoose.Schema({
   courseID: Number,
   notice: String,
@@ -18,6 +18,7 @@ const courseNoticeSchema = mongoose.Schema({
     default: '课堂通知',
   },
   ID: Number,
+  show: Boolean,
 })
 
 const courseNotice = mongoose.model('Course_notice_db', courseNoticeSchema, 'course_notice_db')
@@ -104,36 +105,41 @@ function delCheckedNotice(arr) {
 }
 
 // 添加一条课程公告
-// function addNotice(data) {
-//   const u = new courseNotice(data)
-//   u.save((err) => {
-//     if (err) {
-//       console.log(err)
-//       return
-//     }
-//   })
-// }
+function addNotice(data) {
+  const u = new courseNotice(data)
+  u.save((err) => {
+    if (err) {
+      console.log(err)
+      reject(400)
+    }
+  })
+}
 
 // 添加课程公告的方法
+function addAllNotice(data, date) {
+  return new Promise((resolve, reject) => {
+    findStudentClass(data.grade, data.career, data.class).then((doc) => {
+      console.log(data)
+      var msg = []
+      for (var i = 0; i < doc.length; i++) {
+        msg.push({
+          courseID: data.courseID,
+          notice: data.notice,
+          title: data.title,
+          Time: date,
+          courseName: data.courseName,
+          ID: doc[i].ID,
+          show: false,
+        })
+      }
+      for (var i = 0; i < msg.length; i++) {
+        addNotice(msg[i])
+      }
+      resolve(200)
+    })
+  })
+}
 
-// var time = new Date()
-// const date = time.getTime()
-// findStudentClass(18, '物联网工程', 2).then((doc) => {
-//   var msg = []
-//   for (var i = 0; i < doc.length; i++) {
-//     msg.push({
-//       courseID: 1,
-//       notice: '（1）注意截止日期为10月8日（2）提交时请提交4个文件，一个Word实验报告，3个Java代码源文件（3）提交时不要打包，',
-//       title: '实验作业提交注意事项',
-//       Time: date,
-//       courseName: '计算机组成原理',
-//       ID: doc[i].ID,
-//     })
-//   }
-//   for (var i = 0; i < msg.length; i++) {
-//     addNotice(msg[i])
-//   }
-// })
 module.exports = {
   getCourseNotice,
   readNotice,
@@ -141,4 +147,5 @@ module.exports = {
   delNotice,
   delCheckedNotice,
   inCourseNotice,
+  addAllNotice,
 }
