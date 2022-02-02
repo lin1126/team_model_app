@@ -14,6 +14,18 @@ function getStudentClass(grade, career, cla) {
     })
   })
 }
+// 根据学号查询学生信息
+function getStuInfo(ID) {
+  return new Promise((resolve, reject) => {
+    student.find({ ID: ID }, (err, doc) => {
+      if (err) {
+        reject(400)
+      }
+      resolve(doc)
+    })
+  })
+}
 module.exports = {
   getStudentClass,
+  getStuInfo,
 }
