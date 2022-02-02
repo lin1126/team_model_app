@@ -2,7 +2,7 @@ const express = require('express')
 // 获取前台提交的文件数据的第三方模块
 const multiparty = require('multiparty')
 const app = express()
-const { updateStudentInfo, updatePwd, updatePhoto, getGrade, getCareer, getClass } = require('../dbs/student.DB')
+const { findStudentClass, updateStudentInfo, updatePwd, updatePhoto, getGrade, getCareer, getClass } = require('../dbs/student.DB')
 const { verifyToken } = require('../../server/middlewares/auth')
 
 // 更新用户基本信息
@@ -125,5 +125,6 @@ app.get('/getClass', async (req, res) => {
     res.send(msg)
   }
 })
+
 // 暴露api模块
 module.exports = app

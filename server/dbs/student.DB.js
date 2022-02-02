@@ -8,7 +8,11 @@ function findStudentClass(grade, career, cla) {
       if (err) {
         reject(err)
       }
-      resolve(doc)
+      const res = {
+        stuList: doc,
+        stuLength: doc.length,
+      }
+      resolve(res)
     })
   })
 }
@@ -52,6 +56,7 @@ function updateStudentInfo(id, field, data) {
     })
   }
 }
+
 // 修改密码
 function updatePwd(id, oldPwd, newPwd) {
   return new Promise((resolve, reject) => {
