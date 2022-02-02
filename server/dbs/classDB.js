@@ -2,16 +2,39 @@ const { student } = require('./loginDB')
 // 查找某班级下所有学生
 function getStudentClass(grade, career, cla) {
   return new Promise((resolve, reject) => {
-    student.find({ grade: grade, career: career, class: cla }, { name: 1, ID: 1, identity: 1 }, (err, doc) => {
-      if (err) {
-        reject(err)
+    student.aggregate(
+      [
+        {
+          $match: { grade: grade, career: career, class: cla },
+        },
+        {
+          $project: { name: 1, ID: 1, identity: 1 },
+        },
+        {
+          $sort: { ID: 1 },
+        },
+      ],
+      (err, doc) => {
+        if (err) {
+          reject(err)
+        }
+        const res = {
+          stuList: doc,
+          stuLength: doc.length,
+        }
+        resolve(res)
       }
-      const res = {
-        stuList: doc,
-        stuLength: doc.length,
-      }
-      resolve(res)
-    })
+    )
+    // student.find({ grade: grade, career: career, class: cla }, { name: 1, ID: 1, identity: 1 }, (err, doc) => {
+    //   if (err) {
+    //     reject(err)
+    //   }
+    //   const res = {
+    //     stuList: doc,
+    //     stuLength: doc.length,
+    //   }
+    //   resolve(res)
+    // })
   })
 }
 // 根据学号查询学生信息
