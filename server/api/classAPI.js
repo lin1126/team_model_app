@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const { findStudentClass } = require('../dbs/student.DB')
+const { getStudentClass } = require('../dbs/classDB')
 const { verifyToken } = require('../../server/middlewares/auth')
 
 // 查找某班级下所有学生
@@ -11,7 +11,7 @@ app.post('/getStudent', async (req, res) => {
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
     if (isValid.identify == '教师') {
-      const data = await findStudentClass(_grade, _career, _class)
+      const data = await getStudentClass(_grade, _career, _class)
       res.send(data)
     } else {
       const msg = { isValid: isValid.isValid, info: '权限不足' }
