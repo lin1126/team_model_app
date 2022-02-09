@@ -25,16 +25,6 @@ function getStudentClass(grade, career, cla) {
         resolve(res)
       }
     )
-    // student.find({ grade: grade, career: career, class: cla }, { name: 1, ID: 1, identity: 1 }, (err, doc) => {
-    //   if (err) {
-    //     reject(err)
-    //   }
-    //   const res = {
-    //     stuList: doc,
-    //     stuLength: doc.length,
-    //   }
-    //   resolve(res)
-    // })
   })
 }
 // 根据学号查询学生信息
@@ -48,7 +38,21 @@ function getStuInfo(ID) {
     })
   })
 }
+// 添加学生
+function addStudent(data) {
+  return new Promise((resolve, reject) => {
+    const u = new student(data)
+    u.save((err) => {
+      if (err) {
+        resolve({ code: 408, msg: '学号已存在，请重新填写' })
+      }
+      resolve({ code: 200, msg: '学生添加成功！' })
+    })
+  })
+}
+
 module.exports = {
   getStudentClass,
   getStuInfo,
+  addStudent,
 }

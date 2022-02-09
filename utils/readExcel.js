@@ -31,6 +31,7 @@ sheets.forEach(function (sheet) {
         email: '',
         photo: 'http://39.105.106.13:9999/stuphoto/stuphoto.jpg',
         identity: '学生',
+        place: '',
       })
     }
   }
