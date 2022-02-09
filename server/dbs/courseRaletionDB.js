@@ -94,15 +94,16 @@ function addAllCourse(CID, teacherID, teacherName, courseMsg) {
   return new Promise((resolve, reject) => {
     findStudentClass(courseMsg.gradeValue, courseMsg.careerValue, courseMsg.classValue).then((doc) => {
       var msg = []
-      for (var i = 0; i < doc.length; i++) {
+      console.log(doc)
+      for (var i = 0; i < doc.stuLength; i++) {
         msg.push({
-          ID: doc[i].ID,
+          ID: doc.stuList[i].ID,
           courseID: CID,
           teacherID: teacherID,
           teacherName: teacherName,
         })
       }
-
+      // console.log(msg)
       for (var i = 0; i < msg.length; i++) {
         addRelation(msg[i])
       }
@@ -115,4 +116,5 @@ module.exports = {
   findCourse,
   findTeachCourse,
   addAllCourse,
+  courseRaletion,
 }

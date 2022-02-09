@@ -5,6 +5,7 @@ const { stringify } = require('nodemon/lib/utils')
 const mongoose = require('../../utils/mongodb')
 const { addAllCourse } = require('./courseRaletionDB')
 const { getStuInfo } = require('./loginDB')
+const { courseRaletion } = require('./courseRaletionDB')
 
 const courseSchema = mongoose.Schema({
   courseID: {
@@ -80,14 +81,44 @@ function addCourse(teacherID, teacherName, courseMsg) {
           if (err) {
             reject(err)
           }
-          const res = await addAllCourse(CID, teacherID, teacherName, courseMsg).then()
+          const res = await addAllCourse(CID, teacherID, teacherName, courseMsg)
           resolve(res)
         })
       })
   })
 }
 
+// 修改课程状态
+function chageCourseState(courseID, state) {
+  return new Promise((resolve, reject) => {
+    course.updateOne({ courseID: courseID }, { state: state }, (err, doc) => {
+      if (err) {
+        resolve(400)
+      }
+      resolve(200)
+    })
+  })
+}
+
+// 删除课程
+function delCourse(courseID) {
+  return new Promise((resolve, reject) => {
+    course.deleteOne({ courseID: courseID }, (err, doc) => {
+      if (err) {
+        resolve(400)
+      }
+      courseRaletion.deleteMany({ courseID: courseID }, (err, doc) => {
+        if (err) {
+          resolve(400)
+        }
+        resolve(200)
+      })
+    })
+  })
+}
 module.exports = {
   findStudentClass,
   addCourse,
+  chageCourseState,
+  delCourse,
 }
