@@ -51,8 +51,20 @@ function addStudent(data) {
   })
 }
 
+// 删除学生
+function delStudent(id) {
+  return new Promise((resolve, reject) => {
+    student.deleteOne({ ID: id }, (err, doc) => {
+      if (err) {
+        resolve(222)
+      }
+      resolve(200)
+    })
+  })
+}
 module.exports = {
   getStudentClass,
   getStuInfo,
   addStudent,
+  delStudent,
 }
