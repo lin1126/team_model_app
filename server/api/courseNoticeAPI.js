@@ -3,7 +3,7 @@
  ***************************************************************/
 const express = require('express')
 const app = express()
-const { getCourseNotice, readNotice, readAllNotice, delNotice, delCheckedNotice, inCourseNotice } = require('../dbs/courseNoticeDB')
+const { getCourseNotice, readNotice, readAllNotice, delNotice, delCheckedNotice, inCourseNotice, getUnreadNotice } = require('../dbs/courseNoticeDB')
 const { verifyToken } = require('../../server/middlewares/auth')
 const { getTeaNotice, addTeaNotice } = require('../dbs/courseTeaNoticeDB')
 // 学生获取类型为课堂通知的消息
@@ -162,4 +162,24 @@ app.post('/addNotice', async (req, res) => {
     res.send(msg)
   }
 })
+
+// 学生获取类型为课堂通知且状态为未读的消息
+app.get('/getUnreadNotice', async (req, res) => {
+  const token = req.headers.authorization
+  const isValid = verifyToken(token)
+  // token成功时就获取相应信息
+  if (isValid.isValid == true) {
+    if (isValid.identify == '学生') {
+      var doc = await getUnreadNotice(parseInt(req.query._id), 1, 5)
+      res.send(doc)
+    } else {
+      const msg = { isValid: isValid.isValid, info: '权限不足' }
+      res.send(msg)
+    }
+  } else {
+    const msg = { isValid: isValid.isValid, info: isValid.tip }
+    res.send(msg)
+  }
+})
+
 module.exports = app

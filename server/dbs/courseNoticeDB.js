@@ -22,6 +22,7 @@ const courseNoticeSchema = mongoose.Schema({
 })
 
 const courseNotice = mongoose.model('Course_notice_db', courseNoticeSchema, 'course_notice_db')
+
 // 发送排序后的课程通知
 function getCourseNotice(data, page, limit) {
   return new Promise((resolve, reject) => {
@@ -39,6 +40,24 @@ function getCourseNotice(data, page, limit) {
       })
   })
 }
+
+// 发送排序后未读的课程通知
+function getUnreadNotice(data, page, limit) {
+  return new Promise((resolve, reject) => {
+    courseNotice
+      .find({ ID: data, State: 'false', type: '课堂通知' })
+      .skip((page - 1) * limit)
+      .limit(limit - 0)
+      .sort({ Time: -1 })
+      .exec((err, doc) => {
+        if (err) {
+          reject('查询课程公告失败')
+        }
+        resolve(doc)
+      })
+  })
+}
+
 // 根据学号和课程号查找课程通知
 function inCourseNotice(data, courseID, page, limit) {
   return new Promise((resolve, reject) => {
@@ -148,4 +167,5 @@ module.exports = {
   delCheckedNotice,
   inCourseNotice,
   addAllNotice,
+  getUnreadNotice,
 }
