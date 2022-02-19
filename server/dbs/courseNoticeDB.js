@@ -138,16 +138,15 @@ function addNotice(data) {
 function addAllNotice(data, date) {
   return new Promise((resolve, reject) => {
     findStudentClass(data.grade, data.career, data.class).then((doc) => {
-      console.log(data)
       var msg = []
-      for (var i = 0; i < doc.length; i++) {
+      for (var i = 0; i < doc.stuLength; i++) {
         msg.push({
           courseID: data.courseID,
           notice: data.notice,
           title: data.title,
           Time: date,
           courseName: data.courseName,
-          ID: doc[i].ID,
+          ID: doc.stuList[i].ID,
           show: false,
         })
       }

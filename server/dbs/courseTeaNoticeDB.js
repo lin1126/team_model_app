@@ -57,6 +57,7 @@ function addTeaNotice(data) {
         reject(400)
       }
     })
+
     // 为班级中的每一个学生都添加上课程通知
     const res = await addAllNotice(data, date)
     resolve(res)

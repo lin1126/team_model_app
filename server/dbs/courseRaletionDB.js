@@ -94,7 +94,6 @@ function addAllCourse(CID, teacherID, teacherName, courseMsg) {
   return new Promise((resolve, reject) => {
     findStudentClass(courseMsg.gradeValue, courseMsg.careerValue, courseMsg.classValue).then((doc) => {
       var msg = []
-      console.log(doc)
       for (var i = 0; i < doc.stuLength; i++) {
         msg.push({
           ID: doc.stuList[i].ID,
