@@ -11,7 +11,7 @@ app.get('/get', async (req, res) => {
   const isValid = verifyToken(token)
   // token成功时判断权限
   if (isValid.isValid == true) {
-    if (isValid.identify == '学生') {
+    if (isValid.identify == '管理员') {
       var doc = await getHumiture(req.query._page, req.query._limit)
       res.send(doc)
     } else {

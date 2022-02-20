@@ -22,10 +22,20 @@ function addEquipment(data) {
   u.save((err) => {
     if (err) {
       console.log(err)
-      console.log('添加设备使用记录失败')
       return
     }
-    console.log('添加设备使用记录成功')
+  })
+}
+
+// 查询设备使用日志总长度
+function getEquipmentLength() {
+  return new Promise((resolve, reject) => {
+    equipment.find({}).exec((err, doc) => {
+      if (err) {
+        resolve(400)
+      }
+      resolve(doc.length)
+    })
   })
 }
 
@@ -40,10 +50,8 @@ function getEquipment(page, limit) {
       .exec((err, doc) => {
         if (err) {
           console.log(err)
-          reject('查询设备使用记录失败')
           return
         }
-        console.log('查询设备使用记录成功')
         resolve(doc)
       })
   })
@@ -59,14 +67,13 @@ function getTimeEquipment(page, limit, start, end) {
       .sort({ time: -1 })
       .exec((err, doc) => {
         if (err) {
-          console.log(err)
           resolve('查询设备使用记录失败')
           return
         }
-        console.log('查询设备使用记录成功')
+
         resolve(doc)
       })
   })
 }
 
-module.exports = { addEquipment, getEquipment, getTimeEquipment }
+module.exports = { addEquipment, getEquipment, getTimeEquipment, getEquipmentLength }
