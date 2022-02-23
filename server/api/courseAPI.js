@@ -1,6 +1,6 @@
 /***************************************************************
  * 课程部分api
- ***************************************************************/
+ ***************************************************************/javascript:;
 const express = require('express')
 const app = express()
 const { findCourse, findTeachCourse } = require('../dbs/courseRaletionDB.js')

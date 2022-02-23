@@ -17,13 +17,13 @@ client.on('message', (topic, message) => {
     // 保存图片
   } else if (topic == 'pic/update') {
     base64String = message.toString('base64')
-    dataBuffer = new Buffer(base64String, 'base64');
+    dataBuffer = new Buffer(base64String, 'base64')
     var timestamp = new Date().getTime()
-    fs.writeFile("./images/" + timestamp + ".jpg", dataBuffer, function (err) {
+    fs.writeFile('/www/wwwroot/www.team_modle.com/upload/' + timestamp + '.jpg', dataBuffer, function (err) {
       if (err) {
-        console.log(err);
+        console.log(err)
       } else {
-        console.log('保存成功');
+        console.log('保存成功')
       }
     })
   }

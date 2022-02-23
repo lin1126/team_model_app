@@ -6,7 +6,7 @@ const app = express()
 const fs = require('fs')
 // 按照时间区间处理图片
 const readDirByTime = (start, end, skip, limit) => {
-  let dirInfo = fs.readdirSync('./images')
+  let dirInfo = fs.readdirSync('/www/wwwroot/www.team_modle.com/upload')
   dirInfo.reverse()
   let PicDirInfo = []
   // 遍历所图片
@@ -25,7 +25,7 @@ const readDirByTime = (start, end, skip, limit) => {
 
 // 获取图片
 const readDir = (start, end, skip, limit) => {
-  let dirInfo = fs.readdirSync('./images')
+  let dirInfo = fs.readdirSync('/www/wwwroot/www.team_modle.com/upload')
   let PicDirInfo = []
 
   dirInfo.reverse()

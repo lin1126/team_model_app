@@ -49,7 +49,7 @@ app.post('/updateImage', (req, res) => {
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
     let form = new multiparty.Form()
-    form.uploadDir = './images/photo'
+    form.uploadDir = '/www/wwwroot/www.team_modle.com/stuphoto'
     form.keepExtensions = true //是否保留后缀
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -58,7 +58,9 @@ app.post('/updateImage', (req, res) => {
       }
       const path = files.file[0].path
       // const path = 'images\photo\bpoJrW4NZ8cc8pWbF7NL_Flr.jpg'
-      const index = path.lastIndexOf('\\')
+      // /www/wwwroot/www.team_modle.com/stuphoto/NDLIandfCJPeeFIF5pzw55vT.jpg
+      console.log(path)
+      const index = path.lastIndexOf('\/')
       const subPath = path.substring(index + 1, path.length)
       const savePath = 'http://39.105.106.13:9999/stuphoto/' + subPath
       const doc = await updatePhoto(isValid.id, savePath)

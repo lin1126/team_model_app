@@ -7,29 +7,29 @@ const mqtt = require('mqtt')
 const options = {
   connectTimeout: 4000, // 超时时间
   // 认证信息
-  clientId: 'node',
+  clientId: 'node'
 }
 
 var client
 
 client = mqtt.connect('ws://39.105.106.13:8083/mqtt')
 const subscription = function (topic) {
-  client.on('reconnect', (error) => {
+  client.on('reconnect', error => {
     console.log('正在重连:', error)
   })
 
-  client.on('error', (error) => {
+  client.on('error', error => {
     console.log('连接失败:', error)
   })
 
-  client.on('connect', (e) => {
+  client.on('connect', e => {
     console.log('成功连接服务器')
     client.subscribe(
       topic,
       {
-        qos: 0,
+        qos: 0
       },
-      (error) => {
+      error => {
         if (!error) {
           console.log('订阅成功')
         }
@@ -39,14 +39,19 @@ const subscription = function (topic) {
 }
 
 var sendMqttMsg = function (theme, Data) {
-  client.publish(theme, Data, {
-    qos: 1,
-    rein: false
-  }, (error) => {
-    if (!error) {
-
+  client.publish(
+    theme,
+    Data,
+    {
+      qos: 1,
+      rein: false
+    },
+    error => {
+      if (!error) {
+        return
+      }
+      console.log(error)
     }
-    console.log(error || '发布成功')
-  })
+  )
 }
 module.exports = { client, subscription, sendMqttMsg }
