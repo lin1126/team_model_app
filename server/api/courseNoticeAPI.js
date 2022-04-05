@@ -6,6 +6,7 @@ const app = express()
 const { getCourseNotice, readNotice, readAllNotice, delNotice, delCheckedNotice, inCourseNotice, getUnreadNotice } = require('../dbs/courseNoticeDB')
 const { verifyToken } = require('../../server/middlewares/auth')
 const { getTeaNotice, addTeaNotice } = require('../dbs/courseTeaNoticeDB')
+const { getCourseNotice1 } = require('../dbs/courseTeaNoticeDB')
 // 学生获取类型为课堂通知的消息
 app.get('/getNotice', async (req, res) => {
   const token = req.headers.authorization
@@ -32,7 +33,7 @@ app.get('/getCourseNotice', async (req, res) => {
   // token成功时就获取相应信息
   if (isValid.isValid == true) {
     if (isValid.identify == '学生') {
-      var doc = await inCourseNotice(parseInt(req.query._id), parseInt(req.query._courseID), req.query._page, req.query._limit)
+      var doc = await getCourseNotice1(parseInt(req.query._courseID))
       res.send(doc)
     } else {
       const msg = { isValid: isValid.isValid, info: '权限不足' }

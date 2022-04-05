@@ -24,7 +24,7 @@ const courseNoticeSchema = mongoose.Schema({
 const courseNotice = mongoose.model('Course_notice_db', courseNoticeSchema, 'course_notice_db')
 
 // 发送排序后的课程通知
-function getCourseNotice(data, page, limit) {
+function getCourseNotice (data, page, limit) {
   return new Promise((resolve, reject) => {
     courseNotice
       .find({ ID: data, type: '课堂通知' })
@@ -42,7 +42,7 @@ function getCourseNotice(data, page, limit) {
 }
 
 // 发送排序后未读的课程通知
-function getUnreadNotice(data, page, limit) {
+function getUnreadNotice (data, page, limit) {
   return new Promise((resolve, reject) => {
     courseNotice
       .find({ ID: data, State: 'false', type: '课堂通知' })
@@ -59,7 +59,7 @@ function getUnreadNotice(data, page, limit) {
 }
 
 // 根据学号和课程号查找课程通知
-function inCourseNotice(data, courseID, page, limit) {
+function inCourseNotice (data, courseID, page, limit) {
   return new Promise((resolve, reject) => {
     courseNotice
       .find({ ID: data, type: '课堂通知', courseID: courseID })
@@ -77,7 +77,7 @@ function inCourseNotice(data, courseID, page, limit) {
 }
 
 // 将课程通知的状态改成已读
-function readNotice(id, data) {
+function readNotice (id, data) {
   return new Promise((resolve, reject) => {
     courseNotice.updateOne({ _id: id }, { State: data }, (err, doc) => {
       if (err) {
@@ -89,7 +89,7 @@ function readNotice(id, data) {
 }
 
 // 将该学生的所有通知设为true
-function readAllNotice(ID) {
+function readAllNotice (ID) {
   return new Promise((resolve, reject) => {
     courseNotice.updateMany({ ID: ID, State: 'false' }, { State: 'true' }, (err, doc) => {
       if (err) {
@@ -101,7 +101,7 @@ function readAllNotice(ID) {
 }
 
 // 删除通知
-function delNotice(id) {
+function delNotice (id) {
   return new Promise((resolve, reject) => {
     courseNotice.deleteOne({ _id: id }, (err, doc) => {
       if (err) {
@@ -113,7 +113,7 @@ function delNotice(id) {
 }
 
 // 删除选中的通知
-function delCheckedNotice(arr) {
+function delCheckedNotice (arr) {
   arr.forEach(async (item) => {
     const res = await delNotice(item)
     if (res == 400) {
@@ -124,7 +124,7 @@ function delCheckedNotice(arr) {
 }
 
 // 添加一条课程公告
-function addNotice(data) {
+function addNotice (data) {
   const u = new courseNotice(data)
   u.save((err) => {
     if (err) {
@@ -135,7 +135,7 @@ function addNotice(data) {
 }
 
 // 添加课程公告的方法
-function addAllNotice(data, date) {
+function addAllNotice (data, date) {
   return new Promise((resolve, reject) => {
     findStudentClass(data.grade, data.career, data.class).then((doc) => {
       var msg = []

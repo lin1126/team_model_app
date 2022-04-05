@@ -18,7 +18,7 @@ const courseNoticeSchema = mongoose.Schema({
 const courseTeaNotice = mongoose.model('Teacher_notice_db', courseNoticeSchema, 'teacher_notice_db')
 
 // 教师获取课程公告
-function getTeaNotice(teacherID, courseID, page, limit) {
+function getTeaNotice (teacherID, courseID, page, limit) {
   return new Promise((resolve, reject) => {
     courseTeaNotice
       .find({ ID: teacherID, courseID: courseID })
@@ -35,8 +35,26 @@ function getTeaNotice(teacherID, courseID, page, limit) {
   })
 }
 
+//学生获取课程公告
+function getCourseNotice1 (courseID) {
+  return new Promise((resolve, reject) => {
+    courseTeaNotice
+      .find({ courseID: courseID })
+      .sort({ State: 1 })
+      .sort({ Time: -1 })
+      .exec((err, doc) => {
+        if (err) {
+          reject('查询课程公告失败')
+        }
+        resolve(doc)
+      })
+  })
+}
+
+
+
 // 添加课程公告的方法
-function addTeaNotice(data) {
+function addTeaNotice (data) {
   return new Promise(async (resolve, reject) => {
     var time = new Date()
     const date = time.getTime()
@@ -67,4 +85,5 @@ function addTeaNotice(data) {
 module.exports = {
   getTeaNotice,
   addTeaNotice,
+  getCourseNotice1
 }
